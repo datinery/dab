@@ -4,14 +4,14 @@ import '../constants.dart';
 import 'text.dart';
 
 class DabAppBarButton extends StatelessWidget {
-  final Widget /*?*/ child;
+  final Widget? child;
   final GestureTapCallback onTap;
   final double appBarButtonWidth;
   final double appBarTextButtonHorizontalPadding;
 
   DabAppBarButton({
-    @required this.onTap,
-    @required this.child,
+    required this.onTap,
+    required this.child,
     this.appBarButtonWidth = 44,
     this.appBarTextButtonHorizontalPadding = 12,
   });
@@ -29,7 +29,7 @@ class DabAppBarButton extends StatelessWidget {
       );
     }
 
-    if (child is DabText && (child as DabText).data.length <= 2) {
+    if (child is DabText && (child as DabText).data!.length <= 2) {
       return GestureDetector(
         onTap: onTap,
         child: SizedBox(

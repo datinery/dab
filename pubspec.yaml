@@ -1,17 +1,23 @@
 name: dab
-description: A new Flutter package project.
+description: datinery bootstrap
 version: 0.0.1
 author:
 homepage:
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
   line_icons: ^1.3.2
+  dio: ^4.0.0-beta4
+  sentry:
+    git:
+      url: git://github.com/getsentry/sentry-dart.git
+      ref: feat/null-safety
+      path: dart
 
 dev_dependencies:
   flutter_test:

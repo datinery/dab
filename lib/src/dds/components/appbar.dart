@@ -6,13 +6,13 @@ import 'close_button.dart';
 import 'text.dart';
 
 class DabAppBar extends StatelessWidget with PreferredSizeWidget {
-  final String title;
-  final TextStyle titleTextStyle;
-  final Widget child;
-  final Color backgroundColor;
-  final Color buttonColor;
-  final List<Widget> leftChildren;
-  final List<Widget> rightChildren;
+  final String? title;
+  final TextStyle? titleTextStyle;
+  final Widget? child;
+  final Color? backgroundColor;
+  final Color? buttonColor;
+  final List<Widget>? leftChildren;
+  final List<Widget>? rightChildren;
 
   DabAppBar({
     this.leftChildren,
@@ -22,12 +22,12 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
     this.child,
     this.backgroundColor,
     this.buttonColor,
-  }) : assert(!(title != null && child != null));
+  }) : assert(title != null || child != null);
 
   @override
   Widget build(BuildContext context) {
-    final canPop = Navigator.of(context)?.canPop();
-    final ModalRoute<dynamic> /*?*/ parentRoute = ModalRoute.of(context);
+    final canPop = Navigator.of(context).canPop();
+    final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
     final useCloseButton =
         parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
 
@@ -41,7 +41,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
               Center(
                 child: title != null
                     ? DabText(
-                        title,
+                        title!,
                         style: titleTextStyle,
                         overflow: TextOverflow.ellipsis,
                       )
@@ -56,7 +56,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: leftChildren ??
-                      (canPop != null && canPop
+                      (canPop
                           ? [
                               useCloseButton
                                   ? DabCloseButton(color: buttonColor)

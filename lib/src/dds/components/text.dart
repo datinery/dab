@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class DabText extends StatelessWidget {
   final String data;
-  final TextStyle style;
-  final TextOverflow /*?*/ overflow;
-  final TextAlign /*?*/ textAlign;
-  final int /*?*/ maxLines;
+  final TextStyle? style;
+  final TextOverflow? overflow;
+  final TextAlign? textAlign;
+  final int? maxLines;
 
   DabText(
     this.data, {
-    @required this.style,
+    this.style,
     this.overflow,
     this.textAlign,
     this.maxLines,

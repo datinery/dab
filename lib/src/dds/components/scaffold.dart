@@ -8,8 +8,8 @@ class DabScaffold extends StatelessWidget {
   final bool extendBodyBehindAppBar;
 
   DabScaffold({
-    @required this.body,
-    @required this.appBar,
+    required this.body,
+    required this.appBar,
     this.extendBodyBehindAppBar = false,
   });
 

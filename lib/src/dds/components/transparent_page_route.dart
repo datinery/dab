@@ -6,8 +6,8 @@ class DabTransparentPageRoute<T> extends PageRoute<T> {
   /// The values of [builder], [maintainState], and [fullScreenDialog] must not
   /// be null.
   DabTransparentPageRoute({
-    @required this.builder,
-    RouteSettings /*?*/ settings,
+    required this.builder,
+    RouteSettings? settings,
     this.maintainState = true,
     bool fullscreenDialog = false,
   }) : super(settings: settings, fullscreenDialog: fullscreenDialog);
@@ -25,10 +25,10 @@ class DabTransparentPageRoute<T> extends PageRoute<T> {
   Duration get transitionDuration => const Duration(milliseconds: 300);
 
   @override
-  Color /*?*/ get barrierColor => null;
+  Color? get barrierColor => null;
 
   @override
-  String /*?*/ get barrierLabel => null;
+  String? get barrierLabel => null;
 
   @override
   bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
