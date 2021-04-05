@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 bootstrap({
   required Widget child,
   String? sentryDsn,
+  Function? onBindingInitialized,
 }) async {
   if (kReleaseMode) {
     WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +17,7 @@ bootstrap({
   final errorHandler = ErrorHandler(dsn: sentryDsn);
 
   runZonedGuarded(
-    () {
+    () async {
       WidgetsFlutterBinding.ensureInitialized();
 
       // Platform error
@@ -30,6 +31,8 @@ bootstrap({
       // Flutter error
       FlutterError.onError = (FlutterErrorDetails details) =>
           errorHandler.handleError(details.exception, details.stack);
+
+      if (onBindingInitialized != null) await onBindingInitialized();
 
       runApp(child);
     },

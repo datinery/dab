@@ -5,13 +5,16 @@ import 'appbar_button.dart';
 
 class DabBackButton extends StatelessWidget {
   final Color? color;
+  final GestureTapCallback? onTap;
 
-  DabBackButton({required this.color});
+  DabBackButton({this.color, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return DabAppBarButton(
-      onTap: () => Navigator.of(context).pop(),
+      onTap: () {
+        onTap != null ? onTap!() : Navigator.of(context).pop();
+      },
       child: Icon(
         LineIcons.arrowLeft,
         color: color,

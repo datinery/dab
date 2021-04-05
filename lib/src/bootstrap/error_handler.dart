@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:sentry/sentry.dart';
+import 'package:dio/dio.dart';
 
 import '../exception/handled_exception.dart';
 
@@ -15,6 +16,10 @@ class ErrorHandler {
   void handleError(exception, StackTrace? stackTrace) {
     if (exception is HandledException) {
       debugPrint('Caught HandledException in error handler.');
+
+      if (exception.originalException is DioError) {
+        debugPrint((exception.originalException as DioError).message);
+      }
 
       return;
     }

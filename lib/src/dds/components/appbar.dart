@@ -22,7 +22,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
     this.child,
     this.backgroundColor,
     this.buttonColor,
-  }) : assert(title != null || child != null);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,6 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
         parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
       color: backgroundColor ?? Colors.transparent,
       child: SafeArea(
         child: Stack(

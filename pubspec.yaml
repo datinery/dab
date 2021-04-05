@@ -11,13 +11,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  line_icons: ^1.3.2
-  dio: ^4.0.0-beta4
+  line_icons: ^2.0.1
+  dio: ^4.0.0
   sentry:
     git:
       url: git://github.com/getsentry/sentry-dart.git
       ref: feat/null-safety
       path: dart
+  quiver: ^3.0.0
 
 dev_dependencies:
   flutter_test:

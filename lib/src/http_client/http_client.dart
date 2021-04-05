@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../exception/handled_exception.dart';
 
 typedef FutureFunction<T> = Future<Response<T>> Function();
-typedef ErrorHandler = Function(DioError e);
+typedef ErrorHandler = Function(BuildContext context, DioError e);
 
 class HttpClient {
   final Dio _dio = Dio();
@@ -31,9 +31,10 @@ class HttpClient {
 
     if (kDebugMode) {
       _dio.interceptors.add(
-        InterceptorsWrapper(onRequest: (options) {
+        InterceptorsWrapper(onRequest: (options, handler) {
           debugPrint(options.uri.toString());
           debugPrint(options.data.toString());
+          handler.next(options);
         }),
       );
     }
@@ -41,30 +42,46 @@ class HttpClient {
 
   Future<Response<T>> get<T>(
     BuildContext? context,
-    String? path, {
-    Map<String, dynamic>? queryParameters,
+    String path, {
+    Map<String, dynamic>? query,
   }) async {
-    return await withHttpErrorHandler<T>(
-      context,
-      () => _dio.get<T>(
-        path!,
-        queryParameters: queryParameters,
-      ),
-    );
+      return await withHttpErrorHandler<T>(
+        context,
+            () => _dio.get<T>(
+          path,
+          queryParameters: query,
+        ),
+      );
   }
 
   Future<Response<T>> post<T>(
     BuildContext? context,
     String path, {
     data,
-    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? query,
   }) async {
     return await withHttpErrorHandler<T>(
       context,
       () => _dio.post<T>(
         path,
         data: data,
-        queryParameters: queryParameters,
+        queryParameters: query,
+      ),
+    );
+  }
+
+  Future<Response<T>> delete<T>(
+      BuildContext? context,
+      String path, {
+        data,
+        Map<String, dynamic>? query,
+      }) async {
+    return await withHttpErrorHandler<T>(
+      context,
+          () => _dio.delete<T>(
+        path,
+        data: data,
+        queryParameters: query,
       ),
     );
   }
@@ -81,24 +98,24 @@ class HttpClient {
             DioErrorType.connectTimeout,
             DioErrorType.sendTimeout,
             DioErrorType.receiveTimeout,
-          ].contains(e.type) ||
-          (e.type == DioErrorType.other && e.error is SocketException)) {
+          ].contains(e.type) ) {
         if (context != null && _onClientError != null) {
-          _onClientError!(e);
+          _onClientError!(context, e);
         }
 
         throw HandledException<DioError>(e);
       }
 
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioErrorType.response ||
+          (e.type == DioErrorType.other && e.error is SocketException)) {
         if (context != null && _onServerError != null) {
-          _onServerError!(e);
+          _onServerError!(context, e);
         }
 
         throw HandledException<DioError>(e);
       }
 
-      rethrow;
+      throw e;
     }
   }
 }
