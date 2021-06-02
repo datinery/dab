@@ -34,6 +34,7 @@ class HttpClient {
         InterceptorsWrapper(onRequest: (options, handler) {
           debugPrint(options.uri.toString());
           debugPrint(options.data.toString());
+          debugPrint(options.headers.toString());
           handler.next(options);
         }),
       );
@@ -63,6 +64,22 @@ class HttpClient {
     return await withHttpErrorHandler<T>(
       context,
       () => _dio.post<T>(
+        path,
+        data: data,
+        queryParameters: query,
+      ),
+    );
+  }
+
+  Future<Response<T>> put<T>(
+      BuildContext? context,
+      String path, {
+        data,
+        Map<String, dynamic>? query,
+      }) async {
+    return await withHttpErrorHandler<T>(
+      context,
+          () => _dio.put<T>(
         path,
         data: data,
         queryParameters: query,

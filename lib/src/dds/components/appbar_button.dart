@@ -12,7 +12,7 @@ class DabAppBarButton extends StatelessWidget {
   DabAppBarButton({
     required this.onTap,
     required this.child,
-    this.appBarButtonWidth = 56,
+    this.appBarButtonWidth = kAppBarIconButtonWidth,
     this.appBarTextButtonHorizontalPadding = 12,
   });
 
@@ -63,7 +63,11 @@ class DabAppBarButton extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: child,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: appBarTextButtonHorizontalPadding
+        ),
+          child: child,),
     );
   }
 }
