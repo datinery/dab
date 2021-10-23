@@ -34,7 +34,6 @@ class HttpClient {
         InterceptorsWrapper(onRequest: (options, handler) {
           debugPrint(options.uri.toString());
           debugPrint(options.data.toString());
-          debugPrint(options.headers.toString());
           handler.next(options);
         }),
       );

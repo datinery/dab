@@ -9,7 +9,7 @@ class GPS {
   GPS({required this.lat, required this.lng});
 
   factory GPS.parse(String value) {
-    final latLng = value.split(' ').map(double.parse).toList();
+    final latLng = value.split(',').map(double.parse).toList();
 
     return GPS(lng: latLng[0], lat: latLng[1]);
   }
