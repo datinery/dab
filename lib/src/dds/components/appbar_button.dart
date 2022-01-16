@@ -18,56 +18,46 @@ class DabAppBarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget gestureDetectorChild;
+
     if (child is Icon) {
-      return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: onTap,
-        child: SizedBox(
-          width: appBarButtonWidth,
-          height: kAppBarHeight,
-          child: Center(child: child),
+      gestureDetectorChild = SizedBox(
+        width: appBarButtonWidth,
+        height: kAppBarHeight,
+        child: Center(child: child),
+      );
+    } else if (child is DabText && (child as DabText).data.length <= 2) {
+      gestureDetectorChild = SizedBox(
+        width: appBarButtonWidth,
+        height: kAppBarHeight,
+        child: Center(
+          child: child,
         ),
       );
-    }
-
-    if (child is DabText && (child as DabText).data.length <= 2) {
-      return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: onTap,
+    } else if (child is DabText) {
+      gestureDetectorChild = Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: appBarTextButtonHorizontalPadding,
+        ),
         child: SizedBox(
-          width: appBarButtonWidth,
           height: kAppBarHeight,
           child: Center(
             child: child,
           ),
         ),
       );
-    }
-
-    if (child is DabText) {
-      return GestureDetector(
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: appBarTextButtonHorizontalPadding,
-          ),
-          child: SizedBox(
-            height: kAppBarHeight,
-            child: Center(
-              child: child,
-            ),
-          ),
-        ),
+    } else {
+      gestureDetectorChild = Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: appBarTextButtonHorizontalPadding),
+        child: child,
       );
     }
 
     return GestureDetector(
       onTap: onTap,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: appBarTextButtonHorizontalPadding
-        ),
-          child: child,),
+      behavior: HitTestBehavior.opaque,
+      child: gestureDetectorChild,
     );
   }
 }

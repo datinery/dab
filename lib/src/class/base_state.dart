@@ -2,21 +2,27 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
-class BaseState<T, S> extends ChangeNotifier {
+typedef KeyFunction<K> = K Function(dynamic element);
+
+class BaseState<T, K> extends ChangeNotifier {
+  final KeyFunction<K>? _keyFunction;
+
+  BaseState({KeyFunction<K>? keyFunction}) : _keyFunction = keyFunction;
+
   @protected
-  LinkedHashMap<S, T> storedItems = LinkedHashMap<S, T>();
+  LinkedHashMap<K, T> storedItems = LinkedHashMap<K, T>();
 
   List<T> get items => storedItems.values.toList();
 
   void replaceAll(List<T> items) {
-    storedItems = LinkedHashMap.fromIterable(items, key: (v) => v.id);
+    storedItems = LinkedHashMap.fromIterable(items, key: _keyFunction ?? (e) => e.id);
 
     notifyListeners();
   }
 
   void unshift(T item) {
     final items = [item, ...storedItems.values];
-    storedItems = LinkedHashMap.fromIterable(items, key: (e) => e.id);
+    storedItems = LinkedHashMap.fromIterable(items, key: _keyFunction ?? (e) => e.id);
 
     notifyListeners();
   }
@@ -26,7 +32,7 @@ class BaseState<T, S> extends ChangeNotifier {
       return;
     }
 
-    storedItems.addAll(LinkedHashMap.fromIterable(items, key: (v) => v.id));
+    storedItems.addAll(LinkedHashMap.fromIterable(items, key: _keyFunction ?? (e) => e.id));
 
     notifyListeners();
   }
@@ -37,7 +43,7 @@ class BaseState<T, S> extends ChangeNotifier {
     notifyListeners();
   }
 
-  void remove(S itemId) {
+  void remove(K itemId) {
     storedItems.remove(itemId);
 
     notifyListeners();

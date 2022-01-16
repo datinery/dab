@@ -1,26 +1,26 @@
 import 'package:dab/dab.dart';
 import 'package:flutter/foundation.dart';
 
-class PagedResponse<T> {
-  final List<T> data;
-  final bool hasNext;
+typedef GetPagedItemsFn<T, P> = Future<List<T>> Function({
+  required int limit,
+  required int offset,
+  P? params,
+});
 
-  PagedResponse({required this.data, required this.hasNext});
-}
-
-abstract class PageService<T, S extends BaseState> {
+class PageService<T, S extends BaseState, P> {
   @protected
   late S state;
+  final int pageSize;
+  final GetPagedItemsFn<T, P> getPagedItemsFn;
 
-  bool _hasSetIsLoaded = false;
+  PageService({required this.pageSize, required this.getPagedItemsFn});
+
   bool _hasNext = true;
   int _page = 1;
 
-  Future<PagedResponse<T>> requestPagination<P>(int page, P? params);
-
-  Future<List<T>?> getItems<P>({bool paginate = false, P? params}) async {
+  Future<List<T>> getItems({bool paginate = false, P? params}) async {
     if (paginate == true && _hasNext == false) {
-      return null;
+      return [];
     }
 
     if (paginate == false) {
@@ -28,25 +28,24 @@ abstract class PageService<T, S extends BaseState> {
       _hasNext = true;
     }
 
-    var res;
+    final limit = pageSize + 1;
+    final offset = (_page - 1) * pageSize;
+    List<T> res =
+        await getPagedItemsFn(limit: limit, offset: offset, params: params);
 
-    try {
-      res = await requestPagination<P>(_page, params);
-      _page += 1;
-    } finally {
-      if (!_hasSetIsLoaded) {
-        _hasSetIsLoaded = true;
-      }
+    _page += 1;
+    _hasNext = res.length > pageSize;
+
+    if (_hasNext) {
+      res = res.sublist(0, pageSize);
     }
-
-    _hasNext = res.hasNext;
 
     if (paginate) {
-      state.add(res.data);
+      state.add(res);
     } else {
-      state.replaceAll(res.data);
+      state.replaceAll(res);
     }
 
-    return res.data;
+    return res;
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,7 @@ class HttpClient {
   HttpClient({
     ErrorHandler? onClientError,
     ErrorHandler? onServerError,
+    bool? useMemCache,
     connectTimeout = 3000,
     sendTimeout = 3000,
     receiveTimeout = 3000,
@@ -29,14 +31,19 @@ class HttpClient {
     _dio.options.sendTimeout = sendTimeout;
     _dio.options.receiveTimeout = receiveTimeout;
 
-    if (kDebugMode) {
+    if (useMemCache == true) {
       _dio.interceptors.add(
+          DioCacheInterceptor(options: CacheOptions(store: MemCacheStore())));
+    }
+
+    if (kDebugMode) {
+      _dio.interceptors.addAll([
         InterceptorsWrapper(onRequest: (options, handler) {
           debugPrint(options.uri.toString());
           debugPrint(options.data.toString());
           handler.next(options);
         }),
-      );
+      ]);
     }
   }
 
@@ -45,13 +52,13 @@ class HttpClient {
     String path, {
     Map<String, dynamic>? query,
   }) async {
-      return await withHttpErrorHandler<T>(
-        context,
-            () => _dio.get<T>(
-          path,
-          queryParameters: query,
-        ),
-      );
+    return await withHttpErrorHandler<T>(
+      context,
+      () => _dio.get<T>(
+        path,
+        queryParameters: query,
+      ),
+    );
   }
 
   Future<Response<T>> post<T>(
@@ -71,14 +78,14 @@ class HttpClient {
   }
 
   Future<Response<T>> put<T>(
-      BuildContext? context,
-      String path, {
-        data,
-        Map<String, dynamic>? query,
-      }) async {
+    BuildContext? context,
+    String path, {
+    data,
+    Map<String, dynamic>? query,
+  }) async {
     return await withHttpErrorHandler<T>(
       context,
-          () => _dio.put<T>(
+      () => _dio.put<T>(
         path,
         data: data,
         queryParameters: query,
@@ -87,14 +94,14 @@ class HttpClient {
   }
 
   Future<Response<T>> delete<T>(
-      BuildContext? context,
-      String path, {
-        data,
-        Map<String, dynamic>? query,
-      }) async {
+    BuildContext? context,
+    String path, {
+    data,
+    Map<String, dynamic>? query,
+  }) async {
     return await withHttpErrorHandler<T>(
       context,
-          () => _dio.delete<T>(
+      () => _dio.delete<T>(
         path,
         data: data,
         queryParameters: query,
@@ -111,10 +118,10 @@ class HttpClient {
       return await futureFunction();
     } on DioError catch (e) {
       if ([
-            DioErrorType.connectTimeout,
-            DioErrorType.sendTimeout,
-            DioErrorType.receiveTimeout,
-          ].contains(e.type) ) {
+        DioErrorType.connectTimeout,
+        DioErrorType.sendTimeout,
+        DioErrorType.receiveTimeout,
+      ].contains(e.type)) {
         if (context != null && _onClientError != null) {
           _onClientError!(context, e);
         }
