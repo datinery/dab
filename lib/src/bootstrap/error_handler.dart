@@ -18,7 +18,9 @@ class ErrorHandler {
       debugPrint('Caught HandledException in error handler.');
 
       if (exception.originalException is DioError) {
-        debugPrint((exception.originalException as DioError).message);
+        final originalException = exception.originalException as DioError;
+        debugPrint(originalException.message);
+        debugPrint(originalException.response?.data.toString());
       }
 
       return;

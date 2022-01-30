@@ -40,8 +40,7 @@ class HttpClient {
       _dio.interceptors.addAll([
         InterceptorsWrapper(onRequest: (options, handler) {
           debugPrint(options.uri.toString());
-          debugPrint(options.data.toString());
-          handler.next(options);
+          return handler.next(options);
         }),
       ]);
     }
@@ -51,12 +50,14 @@ class HttpClient {
     BuildContext? context,
     String path, {
     Map<String, dynamic>? query,
+    Options? options,
   }) async {
     return await withHttpErrorHandler<T>(
       context,
       () => _dio.get<T>(
         path,
         queryParameters: query,
+        options: options,
       ),
     );
   }
@@ -66,6 +67,7 @@ class HttpClient {
     String path, {
     data,
     Map<String, dynamic>? query,
+    Options? options,
   }) async {
     return await withHttpErrorHandler<T>(
       context,
@@ -73,6 +75,7 @@ class HttpClient {
         path,
         data: data,
         queryParameters: query,
+        options: options,
       ),
     );
   }
@@ -82,6 +85,7 @@ class HttpClient {
     String path, {
     data,
     Map<String, dynamic>? query,
+    Options? options,
   }) async {
     return await withHttpErrorHandler<T>(
       context,
@@ -89,6 +93,7 @@ class HttpClient {
         path,
         data: data,
         queryParameters: query,
+        options: options,
       ),
     );
   }
@@ -98,6 +103,7 @@ class HttpClient {
     String path, {
     data,
     Map<String, dynamic>? query,
+    Options? options,
   }) async {
     return await withHttpErrorHandler<T>(
       context,
@@ -105,6 +111,7 @@ class HttpClient {
         path,
         data: data,
         queryParameters: query,
+        options: options,
       ),
     );
   }

@@ -1,5 +1,7 @@
 library dab;
 
+export 'package:dio/dio.dart';
+
 export 'src/bootstrap/bootstrap.dart';
 export 'src/class/class.dart';
 export 'src/database/database.dart';
