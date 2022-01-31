@@ -11,23 +11,17 @@ bootstrap({
   String? sentryDsn,
   Function? onBindingInitialized,
 }) async {
-  if (kReleaseMode) {
-    WidgetsFlutterBinding.ensureInitialized();
-  }
-
+  // WidgetsFlutterBinding.ensureInitialized();
   final errorHandler = ErrorHandler();
 
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-
-      if (sentryDsn != null) {
-        await SentryFlutter.init((options) {
-          options.dsn = sentryDsn;
-          options.environment = kReleaseMode ? 'prod' : 'dev';
-          options.debug = false;
-        });
-      }
+      await SentryFlutter.init((options) {
+        options.dsn = sentryDsn;
+        options.environment = kReleaseMode ? 'prod' : 'dev';
+        options.debug = false;
+      });
 
       // Platform error
       Isolate.current.addErrorListener(RawReceivePort((pair) {

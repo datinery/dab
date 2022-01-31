@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../exception/handled_exception.dart';
 
@@ -30,19 +30,11 @@ class HttpClient {
     _dio.options.connectTimeout = connectTimeout;
     _dio.options.sendTimeout = sendTimeout;
     _dio.options.receiveTimeout = receiveTimeout;
+    _dio.interceptors.add(PrettyDioLogger());
 
     if (useMemCache == true) {
       _dio.interceptors.add(
           DioCacheInterceptor(options: CacheOptions(store: MemCacheStore())));
-    }
-
-    if (kDebugMode) {
-      _dio.interceptors.addAll([
-        InterceptorsWrapper(onRequest: (options, handler) {
-          debugPrint(options.uri.toString());
-          return handler.next(options);
-        }),
-      ]);
     }
   }
 
@@ -145,7 +137,7 @@ class HttpClient {
         throw HandledException<DioError>(e);
       }
 
-      throw e;
+      rethrow;
     }
   }
 }

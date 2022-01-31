@@ -17,6 +17,7 @@ dependencies:
   sentry_flutter: ^6.2.2
   quiver: ^3.0.0
   dio_cache_interceptor: ^3.2.2
+  pretty_dio_logger: ^1.1.1
 
 dev_dependencies:
   flutter_test:
