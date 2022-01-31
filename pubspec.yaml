@@ -14,7 +14,7 @@ dependencies:
   line_icons: ^2.0.1
   dio: ^4.0.0
   floor: ^1.2.0
-  sentry: ^6.0.1
+  sentry_flutter: ^6.2.2
   quiver: ^3.0.0
   dio_cache_interceptor: ^3.2.2
 

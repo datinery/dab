@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:dab/src/bootstrap/error_handler.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 bootstrap({
   required Widget child,
@@ -14,11 +15,19 @@ bootstrap({
     WidgetsFlutterBinding.ensureInitialized();
   }
 
-  final errorHandler = ErrorHandler(dsn: sentryDsn);
+  final errorHandler = ErrorHandler();
 
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      if (sentryDsn != null) {
+        await SentryFlutter.init((options) {
+          options.dsn = sentryDsn;
+          options.environment = kReleaseMode ? 'prod' : 'dev';
+          options.debug = false;
+        });
+      }
 
       // Platform error
       Isolate.current.addErrorListener(RawReceivePort((pair) {
