@@ -22,15 +22,18 @@ class HttpClient {
     ErrorHandler? onClientError,
     ErrorHandler? onServerError,
     bool? useMemCache,
+    String? baseUrl,
     connectTimeout = 3000,
     sendTimeout = 3000,
     receiveTimeout = 3000,
   })  : _onClientError = onClientError,
         _onServerError = onServerError {
+    _dio.options.baseUrl = baseUrl ?? '';
     _dio.options.connectTimeout = connectTimeout;
     _dio.options.sendTimeout = sendTimeout;
     _dio.options.receiveTimeout = receiveTimeout;
-    _dio.interceptors.add(PrettyDioLogger());
+    _dio.interceptors
+        .add(PrettyDioLogger(requestBody: true, requestHeader: true));
 
     if (useMemCache == true) {
       _dio.interceptors.add(
