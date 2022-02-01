@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../exception/handled_exception.dart';
@@ -23,15 +24,15 @@ class HttpClient {
     ErrorHandler? onServerError,
     bool? useMemCache,
     String? baseUrl,
-    connectTimeout = 3000,
-    sendTimeout = 3000,
-    receiveTimeout = 3000,
+    int? connectTimeout,
+    int? sendTimeout,
+    int? receiveTimeout,
   })  : _onClientError = onClientError,
         _onServerError = onServerError {
-    _dio.options.baseUrl = baseUrl ?? '';
-    _dio.options.connectTimeout = connectTimeout;
-    _dio.options.sendTimeout = sendTimeout;
-    _dio.options.receiveTimeout = receiveTimeout;
+    _dio.options.baseUrl = baseUrl != null ? path.join(baseUrl, '/') : '';
+    _dio.options.connectTimeout = connectTimeout ?? 3000;
+    _dio.options.sendTimeout = sendTimeout ?? 3000;
+    _dio.options.receiveTimeout = receiveTimeout ?? 3000;
     _dio.interceptors
         .add(PrettyDioLogger(requestBody: true, requestHeader: true));
 
