@@ -18,6 +18,7 @@ dependencies:
   quiver: ^3.0.0
   dio_cache_interceptor: ^3.2.2
   pretty_dio_logger: ^1.1.1
+  flutter_svg: ^1.0.3
 
 dev_dependencies:
   flutter_test:

@@ -18,7 +18,7 @@ class GPS {
     return '$lng,$lat';
   }
 
-  double distanceTo(GPS gps) {
+  double distanceToInMeters(GPS gps) {
     // https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
     final p = math.pi / 180;
     final a = 0.5 -
@@ -28,7 +28,7 @@ class GPS {
             (1 - math.cos((gps.lng - lng) * p)) /
             2;
 
-    return 12742 * math.asin(math.sqrt(a));
+    return 12742 * math.asin(math.sqrt(a)) * 1000; // meters
   }
 
   @override

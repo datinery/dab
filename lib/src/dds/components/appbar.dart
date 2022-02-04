@@ -1,3 +1,4 @@
+import 'package:dab/dab.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -30,6 +31,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
     final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
     final useCloseButton =
         parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
+    final theme = DabTheme.of(context);
 
     return Container(
       color: backgroundColor ?? Colors.transparent,
@@ -48,7 +50,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
               ),
             Positioned(
               top: 0,
-              left: 0,
+              left: theme.appBarHorizontalPadding ?? 0,
               bottom: 0,
               child: Container(
                 color: backgroundColor ?? Colors.transparent,
@@ -67,7 +69,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
             ),
             Positioned(
               top: 0,
-              right: 0,
+              right: theme.appBarHorizontalPadding ?? 0,
               bottom: 0,
               child: Container(
                 color: backgroundColor ?? Colors.transparent,
