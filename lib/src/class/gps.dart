@@ -1,7 +1,11 @@
 import 'dart:math' as math;
 
+import 'package:json_annotation/json_annotation.dart';
 import 'package:quiver/core.dart';
 
+part 'gps.g.dart';
+
+@JsonSerializable()
 class GPS {
   double lat;
   double lng;
@@ -31,9 +35,13 @@ class GPS {
     return 12742 * math.asin(math.sqrt(a)) * 1000; // meters
   }
 
+  factory GPS.fromJson(Map<String, dynamic> json) => _$GPSFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GPSToJson(this);
+
   @override
   String toString() {
-    return '$lng,$lat';
+    return toJson().toString();
   }
 
   @override

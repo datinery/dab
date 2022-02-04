@@ -19,10 +19,13 @@ dependencies:
   dio_cache_interceptor: ^3.2.2
   pretty_dio_logger: ^1.1.1
   flutter_svg: ^1.0.3
+  json_annotation: ^4.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  json_serializable: ^6.1.4
+  build_runner: ^2.1.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
