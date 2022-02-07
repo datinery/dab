@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:json_annotation/json_annotation.dart';
@@ -11,16 +12,6 @@ class GPS {
   double lng;
 
   GPS({required this.lat, required this.lng});
-
-  factory GPS.parse(String value) {
-    final latLng = value.split(',').map(double.parse).toList();
-
-    return GPS(lng: latLng[0], lat: latLng[1]);
-  }
-
-  String serialize() {
-    return '$lng,$lat';
-  }
 
   double distanceToInMeters(GPS gps) {
     // https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
@@ -36,8 +27,14 @@ class GPS {
   }
 
   factory GPS.fromJson(Map<String, dynamic> json) => _$GPSFromJson(json);
-
   Map<String, dynamic> toJson() => _$GPSToJson(this);
+
+  factory GPS.deserialize(String value) {
+    return GPS.fromJson(jsonDecode(value));
+  }
+  String serialize() {
+    return jsonEncode(toJson());
+  }
 
   @override
   String toString() {

@@ -4,12 +4,12 @@ import 'package:floor/floor.dart';
 class GPSConverter extends TypeConverter<GPS, String> {
   @override
   GPS decode(String value) {
-    return GPS.parse(value);
+    return GPS.deserialize(value);
   }
 
   @override
   String encode(GPS value) {
-    return value.toString();
+    return value.serialize();
   }
 }
 
@@ -18,11 +18,11 @@ class GPSNullableConverter extends TypeConverter<GPS?, String?> {
   GPS? decode(String? value) {
     if (value == null) return null;
 
-    return GPS.parse(value);
+    return GPS.deserialize(value);
   }
 
   @override
   String? encode(GPS? value) {
-    return value?.toString();
+    return value?.serialize();
   }
 }

@@ -7,7 +7,7 @@ void main() {
     final lng = 127.0560695;
     final serializedGPS = '$lng,$lat';
 
-    final gps = GPS.parse(serializedGPS);
+    final gps = GPS.deserialize(serializedGPS);
     expect(gps.lat, lat);
     expect(gps.lng, lng);
     expect(gps.serialize(), serializedGPS);
