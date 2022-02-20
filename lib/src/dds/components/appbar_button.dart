@@ -16,7 +16,7 @@ class DabAppBarButton extends StatelessWidget {
     final theme = DabTheme.of(context);
     final appBarButtonWidth = theme.appBarButtonWidth ?? kAppBarIconButtonWidth;
     final appBarTextButtonHorizontalPadding =
-        theme.appBarTextButtonHorizontalPadding ?? 10;
+        theme.appBarTextButtonHorizontalPadding ?? 8;
 
     Widget gestureDetectorChild;
 

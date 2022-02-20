@@ -6,6 +6,7 @@ class DabTheme extends InheritedWidget {
   final double? appBarButtonWidth;
   final double? appBarTextButtonHorizontalPadding;
   final double? appBarHorizontalPadding;
+  final TextStyle? appBarTitleTextStyle;
 
   const DabTheme({
     Key? key,
@@ -15,6 +16,7 @@ class DabTheme extends InheritedWidget {
     this.appBarButtonWidth,
     this.appBarTextButtonHorizontalPadding,
     this.appBarHorizontalPadding,
+    this.appBarTitleTextStyle,
   }) : super(key: key, child: child);
 
   static DabTheme of(BuildContext context) {

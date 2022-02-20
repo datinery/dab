@@ -43,7 +43,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
                 child: title != null
                     ? DabText(
                         title!,
-                        style: titleTextStyle,
+                        style: titleTextStyle ?? theme.appBarTitleTextStyle,
                         overflow: TextOverflow.ellipsis,
                       )
                     : child,
