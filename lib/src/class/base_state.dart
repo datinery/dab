@@ -2,12 +2,12 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
-typedef KeyFunction<K> = K Function(dynamic element);
+typedef KeyFunction<T, K> = K Function(T element);
 
 class BaseState<T, K> extends ChangeNotifier {
-  final KeyFunction<K>? _keyFunction;
+  final KeyFunction<T, K>? _keyFunction;
 
-  BaseState({KeyFunction<K>? keyFunction}) : _keyFunction = keyFunction;
+  BaseState({KeyFunction<T, K>? keyFunction}) : _keyFunction = keyFunction;
 
   @protected
   LinkedHashMap<K, T> storedItems = LinkedHashMap<K, T>();
@@ -15,15 +15,13 @@ class BaseState<T, K> extends ChangeNotifier {
   List<T> get items => storedItems.values.toList();
 
   void replaceAll(List<T> items) {
-    storedItems = LinkedHashMap.fromIterable(items, key: _keyFunction ?? (e) => e.id);
-
+    storedItems = _createLinkedHashMap(items);
     notifyListeners();
   }
 
   void unshift(T item) {
     final items = [item, ...storedItems.values];
-    storedItems = LinkedHashMap.fromIterable(items, key: _keyFunction ?? (e) => e.id);
-
+    storedItems = _createLinkedHashMap(items);
     notifyListeners();
   }
 
@@ -32,20 +30,24 @@ class BaseState<T, K> extends ChangeNotifier {
       return;
     }
 
-    storedItems.addAll(LinkedHashMap.fromIterable(items, key: _keyFunction ?? (e) => e.id));
-
+    storedItems.addAll(_createLinkedHashMap(items));
     notifyListeners();
   }
 
   void updateItem(item) {
     storedItems.update(item.id, (_) => item);
-
     notifyListeners();
   }
 
   void remove(K itemId) {
     storedItems.remove(itemId);
-
     notifyListeners();
+  }
+
+  LinkedHashMap<K, T> _createLinkedHashMap(List<T> items) {
+    return LinkedHashMap.fromIterable(
+      items,
+      key: _keyFunction != null ? (e) => _keyFunction!(e as T) : (e) => e.id,
+    );
   }
 }
