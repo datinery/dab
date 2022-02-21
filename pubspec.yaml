@@ -19,6 +19,7 @@ dependencies:
   pretty_dio_logger: ^1.1.1
   flutter_svg: ^1.0.3
   json_annotation: ^4.4.0
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
