@@ -3,24 +3,23 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/material.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../exception/handled_exception.dart';
 
 typedef FutureFunction<T> = Future<Response<T>> Function();
-typedef ErrorHandler = Function(BuildContext context, DioError e);
+typedef ErrorCallback = Function(BuildContext context, DioError e);
 
 class HttpClient {
   late final Dio _dio;
-  final ErrorHandler? _onClientError;
-  final ErrorHandler? _onServerError;
+  final ErrorCallback? _onClientError;
+  final ErrorCallback? _onServerError;
 
   BaseOptions get options => _dio.options;
   Interceptors get interceptors => _dio.interceptors;
 
   HttpClient({
-    ErrorHandler? onClientError,
-    ErrorHandler? onServerError,
+    ErrorCallback? onClientError,
+    ErrorCallback? onServerError,
     bool? useMemCache,
     String? baseUrl,
     int? connectTimeout,
@@ -34,9 +33,6 @@ class HttpClient {
       sendTimeout: sendTimeout ?? 3000,
       receiveTimeout: receiveTimeout ?? 3000,
     ));
-
-    // _dio.interceptors
-    //     .add(PrettyDioLogger(requestHeader: true, responseBody: false, compact: true,));
 
     if (useMemCache == true) {
       _dio.interceptors.add(
