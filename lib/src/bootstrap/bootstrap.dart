@@ -24,12 +24,14 @@ bootstrap({
       });
 
       // Platform error
-      Isolate.current.addErrorListener(RawReceivePort((pair) {
-        final exception = pair.first;
-        final stackTrace = pair.last;
+      if (!kIsWeb) {
+        Isolate.current.addErrorListener(RawReceivePort((pair) {
+          final exception = pair.first;
+          final stackTrace = pair.last;
 
-        errorHandler.handleError(exception, stackTrace);
-      }).sendPort);
+          errorHandler.handleError(exception, stackTrace);
+        }).sendPort);
+      }
 
       // Flutter error
       FlutterError.onError = (FlutterErrorDetails details) =>

@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   line_icons: ^2.0.1
-  dio: ^4.0.0
+  dio: ^4.0.4
   floor: ^1.2.0
   sentry_flutter: ^6.2.2
   quiver: ^3.0.0
