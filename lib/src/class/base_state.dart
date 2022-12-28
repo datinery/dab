@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 typedef KeyFunction<T, K> = K Function(T element);
 
 class BaseState<T, K> extends ChangeNotifier {
-  final KeyFunction<T, K>? _keyFunction;
+  final KeyFunction<T, K> keyFunction;
 
-  BaseState({KeyFunction<T, K>? keyFunction}) : _keyFunction = keyFunction;
+  BaseState({required this.keyFunction});
 
   @protected
   LinkedHashMap<K, T> storedItems = LinkedHashMap<K, T>();
@@ -20,7 +20,15 @@ class BaseState<T, K> extends ChangeNotifier {
   }
 
   void unshift(T item) {
-    final items = [item, ...storedItems.values];
+    final items = storedItems.values.toList();
+    items.insert(0, item);
+    storedItems = _createLinkedHashMap(items);
+    notifyListeners();
+  }
+
+  void insert(int index, T item) {
+    final items = storedItems.values.toList();
+    items.insert(index, item);
     storedItems = _createLinkedHashMap(items);
     notifyListeners();
   }
@@ -34,8 +42,8 @@ class BaseState<T, K> extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateItem(item) {
-    storedItems.update(item.id, (_) => item);
+  void updateItem(T item) {
+    storedItems.update(keyFunction(item), (_) => item);
     notifyListeners();
   }
 
@@ -47,7 +55,7 @@ class BaseState<T, K> extends ChangeNotifier {
   LinkedHashMap<K, T> _createLinkedHashMap(List<T> items) {
     return LinkedHashMap.fromIterable(
       items,
-      key: _keyFunction != null ? (e) => _keyFunction!(e as T) : (e) => e.id,
+      key: keyFunction != null ? (e) => keyFunction(e as T) : (e) => e.id,
     );
   }
 }

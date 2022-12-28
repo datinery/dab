@@ -11,7 +11,7 @@ bootstrap({
   String? sentryDsn,
   Function? onBindingInitialized,
 }) async {
-  // WidgetsFlutterBinding.ensureInitialized();
+  FutureBuilder.debugRethrowError = true;
   final errorHandler = ErrorHandler();
 
   runZonedGuarded(

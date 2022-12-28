@@ -1,2 +1,2 @@
-const double kAppBarHeight = 56;
-const double kAppBarIconButtonWidth = 56;
+const double kAppBarHeight = 48;
+const double kAppBarIconButtonWidth = 48;

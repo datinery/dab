@@ -7,31 +7,31 @@ import 'package:flutter/material.dart';
 import '../exception/handled_exception.dart';
 
 typedef FutureFunction<T> = Future<Response<T>> Function();
-typedef ErrorCallback = Function(BuildContext context, DioError e);
+typedef DioErrorCallback = Function(BuildContext context, DioError e);
 
 class HttpClient {
   late final Dio _dio;
-  final ErrorCallback? _onClientError;
-  final ErrorCallback? _onServerError;
+  final DioErrorCallback? _onClientError;
+  final DioErrorCallback? _onServerError;
 
   BaseOptions get options => _dio.options;
   Interceptors get interceptors => _dio.interceptors;
 
   HttpClient({
-    ErrorCallback? onClientError,
-    ErrorCallback? onServerError,
+    DioErrorCallback? onClientError,
+    DioErrorCallback? onServerError,
     bool? useMemCache,
     String? baseUrl,
-    int? connectTimeout,
-    int? sendTimeout,
-    int? receiveTimeout,
+    int? connectTimeout = 5000,
+    int? sendTimeout = 5000,
+    int? receiveTimeout = 5000,
   })  : _onClientError = onClientError,
         _onServerError = onServerError {
     _dio = Dio(BaseOptions(
       baseUrl: baseUrl ?? '',
-      connectTimeout: connectTimeout ?? 3000,
-      sendTimeout: sendTimeout ?? 3000,
-      receiveTimeout: receiveTimeout ?? 3000,
+      connectTimeout: connectTimeout,
+      sendTimeout: sendTimeout,
+      receiveTimeout: receiveTimeout,
     ));
 
     if (useMemCache == true) {
