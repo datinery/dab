@@ -1,27 +1,22 @@
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:dab/src/bootstrap/error_handler.dart';
+import 'package:dab/dab.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
+
+typedef ErrorCallback = Function(dynamic exception, StackTrace? stackTrace);
 
 bootstrap({
   required Widget child,
-  String? sentryDsn,
-  Function? onBindingInitialized,
+  required ErrorCallback onError,
+  required Function? onBindingInitialized,
 }) async {
   FutureBuilder.debugRethrowError = true;
-  final errorHandler = ErrorHandler();
 
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      await SentryFlutter.init((options) {
-        options.dsn = sentryDsn;
-        options.environment = kReleaseMode ? 'prod' : 'dev';
-        options.debug = false;
-      });
 
       // Platform error
       if (!kIsWeb) {
@@ -29,18 +24,41 @@ bootstrap({
           final exception = pair.first;
           final stackTrace = pair.last;
 
-          errorHandler.handleError(exception, stackTrace);
+          _handleError(exception, stackTrace, onError);
         }).sendPort);
       }
 
       // Flutter error
       FlutterError.onError = (FlutterErrorDetails details) =>
-          errorHandler.handleError(details.exception, details.stack);
+          _handleError(details.exception, details.stack, onError);
 
       if (onBindingInitialized != null) await onBindingInitialized();
 
       runApp(child);
     },
-    (exception, stackTrace) => errorHandler.handleError(exception, stackTrace),
+    (exception, stackTrace) => _handleError(exception, stackTrace, onError),
   );
+}
+
+void _handleError(
+  dynamic exception,
+  StackTrace? stackTrace,
+  ErrorCallback? onError,
+) {
+  if (exception is HandledException) {
+    debugPrint('Caught HandledException in error handler.');
+
+    if (exception.originalException is DioError) {
+      final originalException = exception.originalException as DioError;
+      debugPrint(originalException.message);
+      debugPrint(originalException.response?.data.toString());
+    }
+
+    return;
+  }
+
+  debugPrint(exception.toString());
+  debugPrint(stackTrace.toString());
+
+  onError?.call(exception, stackTrace);
 }

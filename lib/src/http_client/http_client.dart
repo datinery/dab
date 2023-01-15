@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../exception/handled_exception.dart';
 
 typedef FutureFunction<T> = Future<Response<T>> Function();
-typedef DioErrorCallback = Function(BuildContext context, DioError e);
+typedef DioErrorCallback = Function(BuildContext? context, DioError e);
 
 class HttpClient {
   late final Dio _dio;
@@ -123,7 +123,7 @@ class HttpClient {
         DioErrorType.sendTimeout,
         DioErrorType.receiveTimeout,
       ].contains(e.type)) {
-        if (context != null && _onClientError != null) {
+        if (_onClientError != null) {
           _onClientError!(context, e);
         }
 
@@ -132,7 +132,7 @@ class HttpClient {
 
       if (e.type == DioErrorType.response ||
           (e.type == DioErrorType.other && e.error is SocketException)) {
-        if (context != null && _onServerError != null) {
+        if (_onServerError != null) {
           _onServerError!(context, e);
         }
 

@@ -43,6 +43,7 @@ class PageService<T, S extends BaseState, P> {
     if (paginate) {
       state.add(res);
     } else {
+      _hasNext = true;
       state.replaceAll(res);
     }
 
