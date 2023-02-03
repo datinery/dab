@@ -3,21 +3,11 @@ import 'dart:async';
 import 'package:dab/dab.dart';
 import 'package:flutter/foundation.dart';
 
-class GetPagedItemsParams<P> {
-  final int limit;
-  final int offset;
-  final P customParams;
-
-  const GetPagedItemsParams({
-    required this.limit,
-    required this.offset,
-    required this.customParams,
-  });
-}
-
-typedef GetPagedItemsFn<T, P> = FutureOr<List<T>> Function(
-  GetPagedItemsParams<P> params,
-);
+typedef GetPagedItemsFn<T, P> = FutureOr<List<T>> Function({
+  required int limit,
+  required int offset,
+  required P params,
+});
 
 class PageService<T, S extends BaseState, P> {
   @protected
@@ -42,11 +32,11 @@ class PageService<T, S extends BaseState, P> {
 
     final limit = pageSize + 1;
     final offset = (_page - 1) * pageSize;
-    List<T> res = await getPagedItemsFn(GetPagedItemsParams(
+    List<T> res = await getPagedItemsFn(
       limit: limit,
       offset: offset,
-      customParams: params,
-    ));
+      params: params,
+    );
 
     _page += 1;
     _hasNext = res.length > pageSize;
