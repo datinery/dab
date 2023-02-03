@@ -1,11 +1,6 @@
 import 'package:dab/dab.dart';
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
-import 'back_button.dart';
-import 'close_button.dart';
-import 'text.dart';
-
 class DabAppBar extends StatelessWidget with PreferredSizeWidget {
   final String? title;
   final TextStyle? titleTextStyle;
@@ -14,6 +9,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
   final Color? buttonColor;
   final List<Widget>? leftChildren;
   final List<Widget>? rightChildren;
+  final double? height;
 
   DabAppBar({
     this.leftChildren,
@@ -23,6 +19,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
     this.child,
     this.backgroundColor,
     this.buttonColor,
+    this.height,
   });
 
   @override
@@ -86,5 +83,5 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kAppBarHeight);
+  Size get preferredSize => Size.fromHeight(height ?? kAppBarHeight);
 }

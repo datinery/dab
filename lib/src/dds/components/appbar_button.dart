@@ -21,30 +21,30 @@ class DabAppBarButton extends StatelessWidget {
     Widget gestureDetectorChild;
 
     if (child is Icon) {
-      gestureDetectorChild = SizedBox(
+      gestureDetectorChild = Container(
         width: appBarButtonWidth,
-        height: kAppBarHeight,
+        height: double.infinity,
         child: Center(child: child),
       );
     } else if (child is SvgPicture) {
-      gestureDetectorChild = SizedBox(
-        height: kAppBarHeight,
+      gestureDetectorChild = Container(
+        height: double.infinity,
         width: appBarButtonWidth,
         child: Center(child: child),
       );
     } else if (child is DabText &&
         (child as DabText).data != null &&
         (child as DabText).data!.length <= 2) {
-      gestureDetectorChild = SizedBox(
+      gestureDetectorChild = Container(
         width: appBarButtonWidth,
-        height: kAppBarHeight,
+        height: double.infinity,
         child: Center(
           child: child,
         ),
       );
     } else {
-      gestureDetectorChild = SizedBox(
-        height: kAppBarHeight,
+      gestureDetectorChild = Container(
+        height: double.infinity,
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: appBarTextButtonHorizontalPadding,

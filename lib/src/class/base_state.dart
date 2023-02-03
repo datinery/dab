@@ -55,7 +55,7 @@ class BaseState<T, K> extends ChangeNotifier {
   LinkedHashMap<K, T> _createLinkedHashMap(List<T> items) {
     return LinkedHashMap.fromIterable(
       items,
-      key: keyFunction != null ? (e) => keyFunction(e as T) : (e) => e.id,
+      key: (e) => keyFunction(e as T),
     );
   }
 }
