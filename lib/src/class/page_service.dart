@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dab/dab.dart';
-import 'package:flutter/foundation.dart';
 
 typedef GetPagedItemsFn<T, P> = FutureOr<List<T>> Function({
   required int limit,
@@ -9,16 +8,26 @@ typedef GetPagedItemsFn<T, P> = FutureOr<List<T>> Function({
   required P params,
 });
 
-class PageService<T, S extends BaseState, P> {
-  @protected
-  late S state;
+typedef HasNextFn<T> = bool Function(List<T> items);
+
+class PageService<T, K, S extends BaseState<T, K>, P> {
+  final S state;
   final int pageSize;
   final GetPagedItemsFn<T, P> getPagedItemsFn;
+  final HasNextFn<T>? hasNextFn;
 
-  PageService({required this.pageSize, required this.getPagedItemsFn});
+  PageService({
+    required this.pageSize,
+    required this.getPagedItemsFn,
+    required this.state,
+    this.hasNextFn,
+  });
 
   bool _hasNext = true;
   int _page = 1;
+
+  bool get hasNext => _hasNext;
+  int get page => _page;
 
   Future<List<T>> getItems({bool paginate = false, required P params}) async {
     if (paginate == true && _hasNext == false) {
@@ -30,8 +39,9 @@ class PageService<T, S extends BaseState, P> {
       _hasNext = true;
     }
 
-    final limit = pageSize + 1;
+    final limit = pageSize;
     final offset = (_page - 1) * pageSize;
+
     List<T> res = await getPagedItemsFn(
       limit: limit,
       offset: offset,
@@ -39,10 +49,11 @@ class PageService<T, S extends BaseState, P> {
     );
 
     _page += 1;
-    _hasNext = res.length > pageSize;
 
-    if (_hasNext) {
-      res = res.sublist(0, pageSize);
+    if (hasNextFn != null) {
+      _hasNext = hasNextFn!(state.items..addAll(res));
+    } else {
+      _hasNext = res.length > 0;
     }
 
     if (paginate) {
