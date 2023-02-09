@@ -27,52 +27,52 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
     final useCloseButton =
         parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
     final theme = DabTheme.of(context);
+    final appBarHorizontalPadding =
+        DabTheme.of(context).appBarHorizontalPadding;
+    final appBarHeight = height ?? kAppBarHeight;
 
     return Container(
       color: backgroundColor ?? Colors.transparent,
       child: SafeArea(
         child: Stack(
           children: [
-            if (title != null)
-              Center(
-                child: title is Widget
-                    ? title
-                    : Text(
-                        title!,
-                        style: titleTextStyle ?? theme.appBarTitleTextStyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-              ),
             Positioned(
               top: 0,
-              left: theme.appBarHorizontalPadding ?? 0,
-              bottom: 0,
-              child: Container(
-                color: backgroundColor ?? Colors.transparent,
+              left: 0,
+              right: 0,
+              child: SizedBox(
+                height: appBarHeight,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: leftChildren ??
-                      (canPop
-                          ? [
-                              useCloseButton
-                                  ? DabCloseButton(color: buttonColor)
-                                  : DabBackButton(color: buttonColor)
-                            ]
-                          : []),
+                  children: [
+                    SizedBox(width: appBarHorizontalPadding),
+                    if (leftChildren != null)
+                      ...leftChildren!
+                    else if (canPop)
+                      useCloseButton
+                          ? const DabCloseButton()
+                          : const DabBackButton(),
+                    const Spacer(),
+                    ...(rightChildren ?? []),
+                    SizedBox(width: appBarHorizontalPadding),
+                  ],
                 ),
               ),
             ),
-            Positioned(
-              top: 0,
-              right: theme.appBarHorizontalPadding ?? 0,
-              bottom: 0,
-              child: Container(
-                color: backgroundColor ?? Colors.transparent,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: rightChildren ?? [],
-                ),
-              ),
+            ConstrainedBox(
+              constraints: BoxConstraints(minHeight: appBarHeight),
+              child: title != null
+                  ? Center(
+                      child: title is Widget
+                          ? title
+                          : Text(
+                              title,
+                              style:
+                                  titleTextStyle ?? theme.appBarTitleTextStyle,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                    )
+                  : const SizedBox(),
             ),
           ],
         ),
