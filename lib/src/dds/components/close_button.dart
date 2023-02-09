@@ -8,7 +8,7 @@ import 'appbar_button.dart';
 class DabCloseButton extends StatelessWidget {
   final Color? color;
 
-  DabCloseButton({required this.color});
+  const DabCloseButton({this.color});
 
   @override
   Widget build(BuildContext context) {

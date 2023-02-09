@@ -2,9 +2,8 @@ import 'package:dab/dab.dart';
 import 'package:flutter/material.dart';
 
 class DabAppBar extends StatelessWidget with PreferredSizeWidget {
-  final String? title;
+  final dynamic title;
   final TextStyle? titleTextStyle;
-  final Widget? child;
   final Color? backgroundColor;
   final Color? buttonColor;
   final List<Widget>? leftChildren;
@@ -16,11 +15,10 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
     this.rightChildren,
     this.title,
     this.titleTextStyle,
-    this.child,
     this.backgroundColor,
     this.buttonColor,
     this.height,
-  });
+  }) : assert(title == null || title is Widget || title is String);
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +33,15 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
       child: SafeArea(
         child: Stack(
           children: [
-            if (title != null || child != null)
+            if (title != null)
               Center(
-                child: title != null
-                    ? DabText(
+                child: title is Widget
+                    ? title
+                    : Text(
                         title!,
                         style: titleTextStyle ?? theme.appBarTitleTextStyle,
                         overflow: TextOverflow.ellipsis,
-                      )
-                    : child,
+                      ),
               ),
             Positioned(
               top: 0,

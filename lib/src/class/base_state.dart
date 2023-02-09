@@ -7,29 +7,29 @@ typedef KeyFunction<T, K> = K Function(T element);
 class BaseState<T, K> extends ChangeNotifier {
   final KeyFunction<T, K> keyFunction;
 
+  LinkedHashMap<K, T> _itemsMap = LinkedHashMap<K, T>();
+
   BaseState({required this.keyFunction});
 
-  @protected
-  LinkedHashMap<K, T> storedItems = LinkedHashMap<K, T>();
-
-  List<T> get items => storedItems.values.toList();
+  List<T> get items => _itemsMap.values.toList();
+  LinkedHashMap<K, T> get itemsMap => _itemsMap;
 
   void replaceAll(List<T> items) {
-    storedItems = _createLinkedHashMap(items);
+    _itemsMap = _createLinkedHashMap(items);
     notifyListeners();
   }
 
   void unshift(T item) {
-    final items = storedItems.values.toList();
+    final items = _itemsMap.values.toList();
     items.insert(0, item);
-    storedItems = _createLinkedHashMap(items);
+    _itemsMap = _createLinkedHashMap(items);
     notifyListeners();
   }
 
   void insert(int index, T item) {
-    final items = storedItems.values.toList();
+    final items = _itemsMap.values.toList();
     items.insert(index, item);
-    storedItems = _createLinkedHashMap(items);
+    _itemsMap = _createLinkedHashMap(items);
     notifyListeners();
   }
 
@@ -38,17 +38,17 @@ class BaseState<T, K> extends ChangeNotifier {
       return;
     }
 
-    storedItems.addAll(_createLinkedHashMap(items));
+    _itemsMap.addAll(_createLinkedHashMap(items));
     notifyListeners();
   }
 
   void updateItem(T item) {
-    storedItems.update(keyFunction(item), (_) => item);
+    _itemsMap.update(keyFunction(item), (_) => item);
     notifyListeners();
   }
 
   void remove(K itemId) {
-    storedItems.remove(itemId);
+    _itemsMap.remove(itemId);
     notifyListeners();
   }
 

@@ -9,7 +9,7 @@ class DabBackButton extends StatelessWidget {
   final Color? color;
   final GestureTapCallback? onTap;
 
-  DabBackButton({this.color, this.onTap});
+  const DabBackButton({this.color, this.onTap});
 
   @override
   Widget build(BuildContext context) {
