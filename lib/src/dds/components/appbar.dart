@@ -35,6 +35,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
       color: backgroundColor ?? Colors.transparent,
       child: SafeArea(
         child: Stack(
+          alignment: Alignment.topCenter,
           children: [
             Positioned(
               top: 0,

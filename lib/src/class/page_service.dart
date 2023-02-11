@@ -27,7 +27,7 @@ class PageService<T, K, S extends BaseState<T, K>, P> {
   bool get hasNext => _hasNext;
   int get page => _page;
 
-  Future<List<T>> getItems({bool paginate = false, required P params}) async {
+  Future<List<T>> getItems({required bool paginate, required P params}) async {
     if (paginate == false) {
       _page = 0;
       _hasNext = true;
