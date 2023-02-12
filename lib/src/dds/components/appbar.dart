@@ -9,6 +9,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
   final List<Widget>? leftChildren;
   final List<Widget>? rightChildren;
   final double? height;
+  final Border? border;
 
   DabAppBar({
     this.leftChildren,
@@ -18,6 +19,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
     this.backgroundColor,
     this.buttonColor,
     this.height,
+    this.border,
   }) : assert(title == null || title is Widget || title is String);
 
   @override
@@ -32,7 +34,10 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
     final appBarHeight = height ?? kAppBarHeight;
 
     return Container(
-      color: backgroundColor ?? Colors.transparent,
+      decoration: BoxDecoration(
+        color: backgroundColor ?? Colors.transparent,
+        border: border,
+      ),
       child: SafeArea(
         child: Stack(
           alignment: Alignment.topCenter,
