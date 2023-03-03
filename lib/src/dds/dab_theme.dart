@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DabTheme extends InheritedWidget {
-  final String? backButtonSvg;
-  final String? closeButtonSvg;
+  final String backButtonSvg;
+  final String closeButtonSvg;
   final double? appBarButtonWidth;
   final double? appBarTextButtonHorizontalPadding;
   final double? appBarHorizontalPadding;
@@ -11,8 +11,8 @@ class DabTheme extends InheritedWidget {
   const DabTheme({
     Key? key,
     required Widget child,
-    this.backButtonSvg,
-    this.closeButtonSvg,
+    required this.backButtonSvg,
+    required this.closeButtonSvg,
     this.appBarButtonWidth,
     this.appBarTextButtonHorizontalPadding,
     this.appBarHorizontalPadding,

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dab/dab.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +12,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
   final List<Widget>? rightChildren;
   final double? height;
   final Border? border;
+  final double? blurSigma;
 
   DabAppBar({
     this.leftChildren,
@@ -20,6 +23,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
     this.buttonColor,
     this.height,
     this.border,
+    this.blurSigma,
   }) : assert(title == null || title is Widget || title is String);
 
   @override
@@ -33,7 +37,7 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
         DabTheme.of(context).appBarHorizontalPadding;
     final appBarHeight = height ?? kAppBarHeight;
 
-    return Container(
+    final child = Container(
       decoration: BoxDecoration(
         color: backgroundColor ?? Colors.transparent,
         border: border,
@@ -56,8 +60,8 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
                       ...leftChildren!
                     else if (canPop)
                       useCloseButton
-                          ? const DabCloseButton()
-                          : const DabBackButton(),
+                          ? DabCloseButton(color: buttonColor)
+                          : DabBackButton(color: buttonColor),
                     const Spacer(),
                     ...(rightChildren ?? []),
                     SizedBox(width: appBarHorizontalPadding),
@@ -84,6 +88,17 @@ class DabAppBar extends StatelessWidget with PreferredSizeWidget {
         ),
       ),
     );
+
+    if (blurSigma != null) {
+      return ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: blurSigma!, sigmaY: blurSigma!),
+          child: child,
+        ),
+      );
+    }
+
+    return child;
   }
 
   @override

@@ -9,7 +9,7 @@ import '../exception/handled_exception.dart';
 typedef FutureFunction<T> = Future<Response<T>> Function();
 typedef DioErrorCallback = Function(BuildContext? context, DioError e);
 
-class HttpClient {
+class DabHttpClient {
   late final Dio _dio;
   final DioErrorCallback? _onClientError;
   final DioErrorCallback? _onServerError;
@@ -17,21 +17,21 @@ class HttpClient {
   BaseOptions get options => _dio.options;
   Interceptors get interceptors => _dio.interceptors;
 
-  HttpClient({
+  DabHttpClient({
     DioErrorCallback? onClientError,
     DioErrorCallback? onServerError,
     bool? useMemCache,
     String? baseUrl,
-    int? connectTimeout = 5000,
-    int? sendTimeout = 5000,
-    int? receiveTimeout = 5000,
+    int connectTimeout = 5000,
+    int sendTimeout = 5000,
+    int receiveTimeout = 5000,
   })  : _onClientError = onClientError,
         _onServerError = onServerError {
     _dio = Dio(BaseOptions(
       baseUrl: baseUrl ?? '',
-      connectTimeout: connectTimeout,
-      sendTimeout: sendTimeout,
-      receiveTimeout: receiveTimeout,
+      connectTimeout: Duration(milliseconds: connectTimeout),
+      sendTimeout: Duration(milliseconds: sendTimeout),
+      receiveTimeout: Duration(milliseconds: receiveTimeout),
     ));
 
     if (useMemCache == true) {
@@ -118,11 +118,7 @@ class HttpClient {
     try {
       return await futureFunction();
     } on DioError catch (e) {
-      if ([
-        DioErrorType.connectTimeout,
-        DioErrorType.sendTimeout,
-        DioErrorType.receiveTimeout,
-      ].contains(e.type)) {
+      if (e.type == DioErrorType.unknown && e.error is SocketException) {
         if (_onClientError != null) {
           _onClientError!(context, e);
         }
@@ -130,8 +126,7 @@ class HttpClient {
         throw HandledException<DioError>(e);
       }
 
-      if (e.type == DioErrorType.response ||
-          (e.type == DioErrorType.other && e.error is SocketException)) {
+      if (e.type == DioErrorType.badResponse) {
         if (_onServerError != null) {
           _onServerError!(context, e);
         }

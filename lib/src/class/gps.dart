@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quiver/core.dart';
 
 part 'gps.g.dart';
 
@@ -47,5 +46,5 @@ class GPS {
   }
 
   @override
-  int get hashCode => hash2(lat, lng);
+  int get hashCode => Object.hash(lat, lng);
 }
