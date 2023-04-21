@@ -2,55 +2,48 @@ import 'dart:async';
 
 import 'package:dab/dab.dart';
 
-typedef GetCursorPagedItemsFn<T, C, P> = FutureOr<CursorPageResponse<T, C>>
-    Function({
-  required C? cursor,
-  required P params,
-});
-
 class CursorPageResponse<T, C> {
   final List<T> list;
-  final C? cursor;
+  final C? currentCursor;
 
   const CursorPageResponse({
     required this.list,
-    required this.cursor,
+    required this.currentCursor,
   });
+
+  factory CursorPageResponse.empty() =>
+      const CursorPageResponse(list: [], currentCursor: null);
 }
 
-class CursorPageService<T, K, C, S extends BaseState<T, K>, P> {
-  final S state;
-  final GetCursorPagedItemsFn<T, C, P> getCursorPagedItemsFn;
+abstract class CursorPageService<T, K, C> {
+  final BaseState<T, K> state;
 
-  CursorPageService({
-    required this.getCursorPagedItemsFn,
-    required this.state,
-  });
+  CursorPageService({required this.state});
 
-  C? _cursor;
+  C? _previousCursor;
   bool _hasNext = true;
 
-  C? get lastCursor => _cursor;
+  C? get previousCursor => _previousCursor;
   bool get hasNext => _hasNext;
 
-  Future<List<T>> getItems({bool paginate = false, required P params}) async {
+  FutureOr<CursorPageResponse<T, C>> getCursorPagedItems({C? previousCursor});
+
+  Future<List<T>> getItems({bool paginate = false}) async {
     if (paginate == false) {
       // reset
       _hasNext = true;
-      _cursor = null;
+      _previousCursor = null;
     }
 
     if (paginate == true && _hasNext == false) {
       return [];
     }
 
-    CursorPageResponse<T, C> res = await getCursorPagedItemsFn(
-      cursor: _cursor,
-      params: params,
-    );
+    CursorPageResponse<T, C> res =
+        await getCursorPagedItems(previousCursor: _previousCursor);
 
     _hasNext = res.list.length > 0;
-    _cursor = res.cursor;
+    _previousCursor = res.currentCursor;
 
     if (paginate) {
       state.add(res.list);

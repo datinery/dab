@@ -8,9 +8,8 @@ import 'package:flutter/material.dart';
 typedef ErrorCallback = Function(dynamic exception, StackTrace? stackTrace);
 
 bootstrap({
-  required Widget child,
   required ErrorCallback onError,
-  required Function? onBindingInitialized,
+  required Function onBindingInitialized,
 }) async {
   FutureBuilder.debugRethrowError = true;
 
@@ -32,9 +31,7 @@ bootstrap({
       FlutterError.onError = (FlutterErrorDetails details) =>
           _handleError(details.exception, details.stack, onError);
 
-      if (onBindingInitialized != null) await onBindingInitialized();
-
-      runApp(child);
+      await onBindingInitialized();
     },
     (exception, stackTrace) => _handleError(exception, stackTrace, onError),
   );

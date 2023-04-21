@@ -2,22 +2,12 @@ import 'dart:async';
 
 import 'package:dab/dab.dart';
 
-typedef GetPagedItemsFn<T, P> = FutureOr<List<T>> Function({
-  required int pageSize,
-  required int offset,
-  required P params,
-});
-
-typedef HasNextFn<T> = bool Function(List<T> items);
-
-class PageService<T, K, S extends BaseState<T, K>, P> {
-  final S state;
+abstract class PageService<T, K> {
+  final BaseState<T, K> state;
   final int pageSize;
-  final GetPagedItemsFn<T, P> getPagedItemsFn;
 
   PageService({
     required this.pageSize,
-    required this.getPagedItemsFn,
     required this.state,
   });
 
@@ -27,7 +17,9 @@ class PageService<T, K, S extends BaseState<T, K>, P> {
   bool get hasNext => _hasNext;
   int get page => _page;
 
-  Future<List<T>> getItems({required bool paginate, required P params}) async {
+  FutureOr<List<T>> getPagedItems({required int pageSize, required int offset});
+
+  Future<List<T>> getItems({required bool paginate}) async {
     if (paginate == false) {
       _page = 0;
       _hasNext = true;
@@ -37,11 +29,8 @@ class PageService<T, K, S extends BaseState<T, K>, P> {
       return [];
     }
 
-    List<T> res = await getPagedItemsFn(
-      pageSize: pageSize,
-      offset: _page * pageSize,
-      params: params,
-    );
+    List<T> res =
+        await getPagedItems(pageSize: pageSize, offset: _page * pageSize);
 
     _page += 1;
     _hasNext = res.length > 0;
