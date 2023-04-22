@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dab/dab.dart';
 
 abstract class PageService<T, K> {
-  final BaseState<T, K> state;
+  final PageState<T, K> state;
   final int pageSize;
 
   PageService({

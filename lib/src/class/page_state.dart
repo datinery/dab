@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 
 typedef KeyFunction<T, K> = K Function(T element);
 
-class BaseState<T, K> extends ChangeNotifier {
+class PageState<T, K> extends ChangeNotifier {
   final KeyFunction<T, K> keyFunction;
 
   LinkedHashMap<K, T> _itemsMap = LinkedHashMap<K, T>();
 
-  BaseState({required this.keyFunction});
+  PageState({required this.keyFunction});
 
   List<T> get items => _itemsMap.values.toList();
   LinkedHashMap<K, T> get itemsMap => _itemsMap;
@@ -34,10 +34,6 @@ class BaseState<T, K> extends ChangeNotifier {
   }
 
   void add(List<T> items) {
-    if (items.isEmpty) {
-      return;
-    }
-
     _itemsMap.addAll(_createLinkedHashMap(items));
     notifyListeners();
   }
