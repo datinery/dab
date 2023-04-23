@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../exception/handled_exception.dart';
 
@@ -21,6 +23,7 @@ class DabHttpClient {
     DioErrorCallback? onClientError,
     DioErrorCallback? onServerError,
     bool? useMemCache,
+    bool? useHiveCache,
     String? baseUrl,
     int connectTimeout = 5000,
     int sendTimeout = 5000,
@@ -37,6 +40,13 @@ class DabHttpClient {
     if (useMemCache == true) {
       _dio.interceptors.add(
           DioCacheInterceptor(options: CacheOptions(store: MemCacheStore())));
+    }
+
+    if (useHiveCache == true) {
+      getTemporaryDirectory().then((dir) {
+        _dio.interceptors.add(DioCacheInterceptor(
+            options: CacheOptions(store: HiveCacheStore(dir.path))));
+      });
     }
   }
 

@@ -39,6 +39,10 @@ abstract class CursorPageService<T, K, C> {
     CursorPageResponse<T, C> res =
         await getCursorPagedItems(lastCursor: _lastCursor);
 
+    while (res.list.isEmpty && res.lastCursor != null) {
+      res = await getCursorPagedItems(lastCursor: res.lastCursor);
+    }
+
     _lastCursor = res.lastCursor;
 
     if (paginate) {
