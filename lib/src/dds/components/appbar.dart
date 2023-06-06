@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:dab/dab.dart';
 import 'package:flutter/material.dart';
 
-class DabAppBar extends StatelessWidget with PreferredSizeWidget {
+class DabAppBar extends StatelessWidget implements PreferredSizeWidget {
   final dynamic title;
   final TextStyle? titleTextStyle;
   final Color? backgroundColor;
